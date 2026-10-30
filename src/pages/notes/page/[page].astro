@@ -1,0 +1,17 @@
+---
+import type { GetStaticPathsOptions, Page } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NoteList from '../../../components/NoteList.astro';
+import FilterNav from '../../../components/FilterNav.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getPublishedNotes, type Note } from '../../../utils/notes';
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  return paginate(await getPublishedNotes(), { pageSize: 10 });
+}
+const { page } = Astro.props as { page: Page<Note> };
+---
+<BaseLayout title={`记录 · 第 ${page.currentPage} 页 | 林哲的个人档案`}>
+  <div class="section-heading"><h2>记录</h2><span>PAGE {page.currentPage}</span></div>
+  <FilterNav /><NoteList notes={page.data} />
+  <Pagination current={page.currentPage} last={page.lastPage} basePath="/notes/" />
+</BaseLayout>

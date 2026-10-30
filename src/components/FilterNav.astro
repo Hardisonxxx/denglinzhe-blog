@@ -1,0 +1,9 @@
+---
+import { NOTE_TYPES, NOTE_TYPE_LABELS, type NoteType } from '../utils/notes';
+interface Props { activeType?: NoteType; }
+const { activeType } = Astro.props;
+---
+<nav class="filter-nav" aria-label="记录类型筛选">
+  <a href="/notes/" aria-current={!activeType ? 'page' : undefined}>全部</a>
+  {NOTE_TYPES.map((type) => <a href={`/notes/type/${type}/`} aria-current={activeType === type ? 'page' : undefined}>{NOTE_TYPE_LABELS[type]}</a>)}
+</nav>

@@ -1,0 +1,8 @@
+.worktrees/
+node_modules/
+dist/
+.astro/
+.superpowers/
+原始文件_本地hexo/
+*.log
+.DS_Store

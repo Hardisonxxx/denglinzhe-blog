@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://denglinzhe.com/sitemap-index.xml

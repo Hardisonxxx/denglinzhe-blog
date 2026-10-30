@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getResearchItems } from '../../utils/research';
+const items = await getResearchItems();
+const labels = { direction: '研究方向', publication: '论文与成果', project: '项目' };
+---
+<BaseLayout title="研究 | 林哲的个人档案" description="研究方向、代表成果与项目。">
+  <div class="section-heading"><h2>研究</h2><span>SELECTED WORK</span></div>
+  {items.length === 0 ? <p class="empty-state">研究内容正在整理。</p> : <div class="card-list">
+    {items.map((item) => <article class="card">
+      <span class="eyebrow">{labels[item.data.type]}</span><h2>{item.data.title}</h2><p>{item.data.summary}</p>
+      {item.data.url && <a href={item.data.url} target="_blank" rel="noopener noreferrer">查看详情 →</a>}
+    </article>)}
+  </div>}
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NoteList from '../components/NoteList.astro';
+import { getPublishedNotes } from '../utils/notes';
+const notes = await getPublishedNotes();
+---
+<BaseLayout>
+  <section class="hero">
+    <span class="eyebrow">Personal archive · Est. 2019</span>
+    <h1>林哲的个人档案</h1>
+    <p>记录日常、阅读与观看，也整理正在研究的事情。<br />不追求频繁更新，只留下值得回看的内容。</p>
+    <div class="blue-rule"></div>
+  </section>
+  <section>
+    <div class="section-heading"><h2>近期记录</h2><span>RECENT NOTES</span></div>
+    <NoteList notes={notes.slice(0, 5)} />
+    <p><a href="/notes/">查看全部记录 →</a></p>
+  </section>
+</BaseLayout>

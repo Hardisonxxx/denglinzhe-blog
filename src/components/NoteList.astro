@@ -1,0 +1,17 @@
+---
+import { NOTE_TYPE_LABELS, getNoteSlug, type Note } from '../utils/notes';
+interface Props { notes: Note[]; emptyText?: string; }
+const { notes, emptyText = '这里还没有公开记录。' } = Astro.props;
+---
+{notes.length === 0 ? <p class="empty-state">{emptyText}</p> : (
+  <ol class="note-list">
+    {notes.map((note, index) => (
+      <li class="note-row">
+        <span class="note-number">{String(index + 1).padStart(3, '0')}</span>
+        <a class="note-title" href={`/notes/${getNoteSlug(note)}/`}>{note.data.title}</a>
+        <time class="note-date" datetime={note.data.pubDate.toISOString()}>{note.data.pubDate.toISOString().slice(0, 10)}</time>
+        <span class="note-type">{NOTE_TYPE_LABELS[note.data.type]}</span>
+      </li>
+    ))}
+  </ol>
+)}

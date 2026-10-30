@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import { NOTE_TYPE_LABELS, getNoteSlug, getPublishedNotes, type Note } from '../../utils/notes';
+export async function getStaticPaths() {
+  const notes = await getPublishedNotes();
+  return notes.map((note, index) => ({
+    params: { slug: getNoteSlug(note) },
+    props: { note, previous: notes[index + 1], next: notes[index - 1] }
+  }));
+}
+const { note, previous, next } = Astro.props as { note: Note; previous?: Note; next?: Note };
+const { Content } = await render(note);
+---
+<BaseLayout title={`${note.data.title} | 林哲的个人档案`} description={note.data.description}>
+  <article>
+    <header class="article-header">
+      <span class="eyebrow">{NOTE_TYPE_LABELS[note.data.type]} · {note.data.pubDate.toISOString().slice(0, 10)}</span>
+      <h1>{note.data.title}</h1><p>{note.data.description}</p>
+    </header>
+    {note.data.cover && <div class="article-cover"><Image src={note.data.cover} alt={note.data.coverAlt} widths={[480, 800, 1200]} sizes="92vw" loading="eager" fetchpriority="high" /></div>}
+    <PhotoGrid photos={note.data.photos} />
+    <div class="prose"><Content /></div>
+  </article>
+  <nav class="article-neighbors" aria-label="相邻记录">
+    <span>{previous && <a href={`/notes/${getNoteSlug(previous)}/`}>← {previous.data.title}</a>}</span>
+    <span>{next && <a href={`/notes/${getNoteSlug(next)}/`}>{next.data.title} →</a>}</span>
+  </nav>
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import type { GetStaticPathsOptions, Page } from 'astro';
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import NoteList from '../../../../../components/NoteList.astro';
+import FilterNav from '../../../../../components/FilterNav.astro';
+import Pagination from '../../../../../components/Pagination.astro';
+import { NOTE_TYPES, NOTE_TYPE_LABELS, getPublishedNotes, type Note, type NoteType } from '../../../../../utils/notes';
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const paths = [];
+  for (const type of NOTE_TYPES) paths.push(...paginate(await getPublishedNotes(type), { params: { type }, pageSize: 10 }));
+  return paths;
+}
+const { page } = Astro.props as { page: Page<Note> };
+const { type } = Astro.params as { type: NoteType };
+---
+<BaseLayout title={`${NOTE_TYPE_LABELS[type]} · 第 ${page.currentPage} 页 | 林哲的个人档案`}>
+  <div class="section-heading"><h2>{NOTE_TYPE_LABELS[type]}</h2><span>PAGE {page.currentPage}</span></div>
+  <FilterNav activeType={type} /><NoteList notes={page.data} />
+  <Pagination current={page.currentPage} last={page.lastPage} basePath={`/notes/type/${type}/`} />
+</BaseLayout>
